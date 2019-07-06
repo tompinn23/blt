@@ -1,22 +1,27 @@
 #ifndef _BLT_H_
 #define _BLT_H_
 
+#if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
+#ifdef __GNUC__
+#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 1)
+#pragma GCC diagnostic ignored "-Wformat-nonliteral" 
+#endif /* __GNUC__ >= 4.1 */
+#endif
+
+
+
 #include <stdio.h>
-
 #include <stddef.h>
-
 #include <stdint.h>
-
 #include <stdarg.h>
-
 #include <stdlib.h>
-
 #include <wchar.h>
 
 #if defined(__cplusplus)
-
 #include <sstream>
-
 #endif
 
 
@@ -249,10 +254,9 @@ extern "C" {
 
 BLT_API int terminal_open();
 BLT_API void terminal_close();
-BLT_API int terminal_set(const char* s);
-BLT_API int terminal_setf(const char* s, ...);
-BLT_API int terminal_wset(const wchar_t* s);
-BLT_API int terminal_wsetf(const wchar_t* s, ...);
+BLT_API int terminal_set8(const int8_t* s);
+BLT_API int terminal_set16(const int16_t* s);
+BLT_API int terminal_set32(const int32_t* s);
 BLT_API void terminal_color(color_t color);
 BLT_API void terminal_bkcolor(color_t color);
 BLT_API void terminal_composition(int mode);
@@ -260,42 +264,303 @@ BLT_API void terminal_layer(int layer);
 BLT_API void terminal_clear();
 BLT_API void terminal_clear_area(int x, int y, int w, int h);
 BLT_API void terminal_crop(int x, int y, int w, int h);
-void terminal_refresh();
-void terminal_put(int x, int y, int code);
-int terminal_pick(int x, int y, int index);
-color_t terminal_pick_color(int x, int y, int index);
-color_t terminal_pick_bkcolor(int x, int y);
-void terminal_put_ext(int x, int y, int dx, int dy, int code, color_t* corners);
-dimensions_t terminal_print(int x, int y, const char* s);
-dimensions_t terminal_wprint(int x, int y, const wchar_t* s);
-dimensions_t terminal_printf(int x, int y, const char* s, ...);
-dimensions_t terminal_wprintf(int x, int y, const wchar_t* s, ...);
-dimensions_t terminal_print_ext(int x, int y, int width, int height, int align, const char* s);
-dimensions_t terminal_wprint_ext(int x, int y, int width, int height, int align, const wchar_t* s);
-dimensions_t terminal_printf_ext(int x, int y, int width, int height, int align, const char* s, ...);
-dimensions_t terminal_wprintf_ext(int x, int y, int width, int height, int align, const wchar_t* s, ...);
-dimensions_t terminal_measure(const char* s);
-dimensions_t terminal_wmeasure(const wchar_t* s);
-dimensions_t terminal_measuref(const char* s, ...);
-dimensions_t terminal_wmeasuref(const wchar_t* s, ...);
-dimensions_t terminal_measure_ext(int width, int height, const char* s);
-dimensions_t terminal_wmeasure_ext(int width, int height, const wchar_t* s);
-dimensions_t terminal_measuref_ext(int width, int height, const char* s, ...);
-dimensions_t terminal_wmeasuref_ext(int width, int height, const wchar_t*s, ...);
-int terminal_state(int slot);
-int terminal_check(int slot);
-int terminal_has_input();
-int terminal_read();
-int terminal_peek();
-color_t terminal_read_str(int x, int y, char* buffer, int max);
-color_t terminal_read_wstr(int x, int y, wchar_t* buffer, int max);
-void terminal_delay(int period);
-color_t color_from_name(const char* name);
-color_t color_from_wname(const wchar_t* name);
-color_t color_from_argb(uint8_t alpha, uint8_t red, uint8_t green, uint8_t blue);
+BLT_API void terminal_refresh();
+BLT_API void terminal_put(int x, int y, int code);
+BLT_API int terminal_pick(int x, int y, int index);
+BLT_API color_t terminal_pick_color(int x, int y, int index);
+BLT_API color_t terminal_pick_bkcolor(int x, int y);
+BLT_API void terminal_put_ext(int x, int y, int dx, int dy, int code, color_t* corners);
+BLT_API dimensions_t terminal_print_ext8(int x, int y, int width, int height, int align, const int8_t* s, int* out_w, int* out_h);
+BLT_API dimensions_t terminal_print_ext16(int x, int y, int width, int height, int align, const int16_t* s, int* out_w, int* out_h);
+BLT_API dimensions_t terminal_print_ext32(int x, int y, int width, int height, int align, const int32_t* s, int* out_w, int* out_h);
+BLT_API dimensions_t terminal_measure_ext8(int width, int height, const int8_t* s, int* out_w, int* out_h);
+BLT_API dimensions_t terminal_measure_ext16(int width, int height, const int16_t* s, int* out_w, int* out_h);
+BLT_API dimensions_t terminal_measure_ext32(int width, int height, const int32_t* s, int* out_w, int* out_h);
+BLT_API int terminal_state(int slot);
+BLT_API int terminal_check(int slot);
+BLT_API int terminal_has_input();
+BLT_API int terminal_read();
+BLT_API int terminal_peek();
+BLT_API int terminal_read_str8(int x, int y, int8_t* buffer, int max);
+BLT_API int terminal_read_str16(int x, int y, int16_t* buffer, int max);
+BLT_API int terminal_read_str32(int x, int y, int32_t* buffer, int max);
+BLT_API void terminal_delay(int period);
+BLT_API const int8_t* terminal_get8(const int8_t* key, const int8_t* default_);
+BLT_API const int16_t* terminal_get16(const int16_t* key, const int16_t* default_);
+BLT_API const int32_t* terminal_get32(const int32_t* key, const int32_t* default_);
+BLT_API color_t color_from_name8(const int8_t* name);
+BLT_API color_t color_from_name16(const int16_t* name);
+BLT_API color_t color_from_name32(const int32_t* name);
+BLT_API color_t color_from_argb(uint8_t alpha, uint8_t red, uint8_t green, uint8_t blue);
 
 #ifdef __cplusplus
 }
 #endif
+
+#define TERMINAL_CAT(a, b) TERMINAL_PRIMITIVE_CAT(a, b)
+
+#define TERMINAL_PRIMITIVE_CAT(a, b) a ## b
+
+/*
+
+ * wchar_t has different sized depending on platform. Furthermore, it's size
+
+ * can be changed for GCC compiler.
+
+ */
+
+#if !defined(__SIZEOF_WCHAR_T__)
+#  if defined(_WIN32)
+#    define __SIZEOF_WCHAR_T__ 2
+#  else
+#    define __SIZEOF_WCHAR_T__ 4
+#  endif
+#endif
+
+
+
+#if __SIZEOF_WCHAR_T__ == 2
+#define BLT_WCHAR_SUFFIX 16
+#define BLT_WCHAR_TYPE int16_t
+#else // 4
+#define BLT_WCHAR_SUFFIX 32
+#define BLT_WCHAR_TYPE int32_t
+#endif
+
+
+
+#if defined(__cplusplus)
+#define BLT_INLINE inline
+#define BLT_DEFAULT(value) = value
+#else
+#define BLT_INLINE static inline
+#define BLT_DEFAULT(value)
+#endif
+
+
+/*
+
+ * These functions provide inline string formatting support
+
+ * for terminal_setf, terminal_printf, etc.
+
+ *
+
+ * Using static termporary buffer is okay because terminal API is not
+
+ * required to be multiple-thread safe by design.
+
+ */
+
+
+
+#define TERMINAL_VSPRINTF_MAXIMUM_BUFFER_SIZE 65536
+
+
+BLT_INLINE const char* terminal_vsprintf(const char* s, va_list args) {
+	static int buffer_size = 512;
+	static char* buffer = NULL;
+	int rc = 0;
+	if (!s)
+		return NULL;
+	else if (!buffer)
+		buffer = (char*)malloc(buffer_size);
+	while (1) {
+		buffer[buffer_size-1] = '\0';
+		rc = vsnprintf(buffer, buffer_size, s, args);
+		if (rc >= buffer_size || buffer[buffer_size-1] != '\0') {
+			if (buffer_size >= TERMINAL_VSPRINTF_MAXIMUM_BUFFER_SIZE)
+				return NULL;
+			buffer_size *= 2;
+			buffer = (char*)realloc(buffer, buffer_size);
+		}
+		else {
+			break;
+		}
+	}
+	return rc >= 0? buffer: NULL;
+}
+
+
+
+BLT_INLINE const wchar_t* terminal_vswprintf(const wchar_t* s, va_list args) {
+	static int buffer_size = 512;
+	static wchar_t* buffer = NULL;
+	int rc = 0;
+	if (!s)
+		return NULL;
+	else if (!buffer)
+		buffer = (wchar_t*)malloc(buffer_size * sizeof(wchar_t));
+	while (1) {
+		buffer[buffer_size-1] = L'\0';
+#if defined(_WIN32)
+		rc = _vsnwprintf(buffer, buffer_size, s, args);
+#else
+		rc = vswprintf(buffer, buffer_size, s, args);
+#endif
+		if (rc >= buffer_size || buffer[buffer_size-1] != L'\0') {
+			if (buffer_size >= TERMINAL_VSPRINTF_MAXIMUM_BUFFER_SIZE)
+				return NULL;
+			buffer_size *= 2;
+			buffer = (wchar_t*)realloc(buffer, buffer_size * sizeof(wchar_t));
+		}
+		else {
+			break;
+		}
+	}
+	return rc >= 0? buffer: NULL;
+}
+
+
+
+#define TERMINAL_FORMATTED_WRAP(type, call) \
+	type ret; \
+	va_list args; \
+	va_start(args, s); \
+	ret = call; \
+	va_end(args); \
+	return ret;
+
+
+
+#define TERMINAL_FORMATTED_WRAP_V(call) \
+	va_list args; \
+	va_start(args, s); \
+	call; \
+	va_end(args);
+
+/*
+ * terminal_[w]xxx[f] -> terminal_xxxx{8|16|32}
+ */
+
+BLT_INLINE int terminal_set(const char* s) {
+	return terminal_set8((const int8_t*)s);
+}
+
+BLT_INLINE int terminal_setf(const char* s, ...) {
+	TERMINAL_FORMATTED_WRAP(int , terminal_set(terminal_vsprintf(s, args)))
+}
+
+BLT_INLINE int terminal_wset(const wchar_t* s) {
+	return TERMINAL_CAT(terminal_set, BLT_WCHAR_SUFFIX)((const BLT_WCHAR_TYPE*)s);
+}
+
+BLT_INLINE int terminal_wsetf(const wchar_t* s, ...) {
+	TERMINAL_FORMATTED_WRAP(int, terminal_wset(terminal_vswprintf(s, args)))
+}
+
+// TERMINAL FONT ?
+
+BLT_INLINE dimensions_t terminal_print(int x, int y, const char* s) {
+	dimensions_t ret;
+	terminal_print_ext8(x, y, 0,0, TK_ALIGN_DEFAULT, (const int8_t*)s, &ret.width, &ret.height);
+	return ret;
+}
+
+BLT_INLINE dimensions_t terminal_printf(int x, int y, const char* s, ...) {
+	TERMINAL_FORMATTED_WRAP(dimensions_t, terminal_print(x, y, terminal_vsprintf(s, args)))
+}
+
+BLT_INLINE dimensions_t terminal_wprint(int x, int y, const wchar_t* s) {
+	dimensions_t ret;
+	TERMINAL_CAT(terminal_print_ext, BLT_WCHAR_SUFFIX)(x, y, 0, 0, TK_ALIGN_DEFAULT, (const BLT_WCHAR_TYPE*)s, &ret.width, &ret.height);
+	return ret;
+}
+
+BLT_INLINE dimensions_t terminal_wprintf(int x, int y, const wchar_t*s, ...)  {
+	TERMINAL_FORMATTED_WRAP(dimensions_t, terminal_wprint(x, y, terminal_vswprintf(s, args)))
+}
+
+BLT_INLINE dimensions_t terminal_print_ext(int x, int y, int w, int h, int align, const char* s) {
+	dimensions_t ret;
+	terminal_print_ext8(x, y, w, h, align, (const int8_t*)s, &ret.width, &ret.height);
+	return ret;
+}
+
+
+BLT_INLINE dimensions_t terminal_printf_ext(int x, int y, int w, int h, int align, const char* s, ...) {
+	TERMINAL_FORMATTED_WRAP(dimensions_t, terminal_print_ext(x, y, w, h, align, terminal_vsprintf(s, args)));
+}
+
+BLT_INLINE dimensions_t terminal_wprint_ext(int x, int y, int w, int h, int align, const wchar_t* s) {
+	dimensions_t ret;
+	TERMINAL_CAT(terminal_print_ext, BLT_WCHAR_SUFFIX)(x, y, w, h, align, (const BLT_WCHAR_TYPE*)s, &ret.width, &ret.height);
+	return ret;
+}
+
+BLT_INLINE dimensions_t terminal_wprintf_ext(int x, int y, int w, int h, int align, const wchar_t* s, ...) {
+	TERMINAL_FORMATTED_WRAP(dimensions_t, terminal_wprint_ext(x, y, w, h, align, terminal_vswprintf(s, args)))
+}
+
+BLT_INLINE dimensions_t terminal_measure(const char* s) {
+	dimensions_t ret;
+	terminal_measure_ext8(0, 0, (const int8_t*)s, &ret.width, &ret.height);
+	return ret;
+}
+
+BLT_INLINE dimensions_t terminal_measuref(const char* s, ...) {
+	TERMINAL_FORMATTED_WRAP(dimensions_t, terminal_measure(terminal_vsprintf(s, args)))
+}
+
+BLT_INLINE dimensions_t terminal_wmeasure(const wchar_t* s) {
+	dimensions_t ret;
+	TERMINAL_CAT(terminal_measure_ext, BLT_WCHAR_SUFFIX)(0, 0, (const BLT_WCHAR_TYPE*)s, &ret.width, &ret.height);
+	return ret;
+}
+
+BLT_INLINE dimensions_t terminal_wmeasuref(const wchar_t* s, ...) {
+	TERMINAL_FORMATTED_WRAP(dimensions_t, terminal_wmeasure(terminal_vswprintf(s, args)))
+}
+
+BLT_INLINE dimensions_t terminal_measure_ext(int w, int h, const char* s) {
+	dimensions_t ret;
+	terminal_measure_ext8(w, h, (const int8_t*)s, &ret.width, &ret.height);
+	return ret;
+}
+
+BLT_INLINE dimensions_t terminal_measuref_ext(int w, int h, const char* s, ...) {
+	TERMINAL_FORMATTED_WRAP(dimensions_t, terminal_measure_ext(w, h, terminal_vsprintf(s, args)))
+}
+
+
+BLT_INLINE dimensions_t terminal_wmeasure_ext(int w, int h, const wchar_t* s) {
+	dimensions_t ret;
+	TERMINAL_CAT(terminal_measure_ext, BLT_WCHAR_SUFFIX)(w, h, (const BLT_WCHAR_TYPE*)s, &ret.width, &ret.height);
+	return ret;
+}
+
+
+BLT_INLINE dimensions_t terminal_wmeasuref_ext(int w, int h, const wchar_t* s, ...) {
+	TERMINAL_FORMATTED_WRAP(dimensions_t, terminal_wmeasure_ext(w, h, terminal_vswprintf(s, args)))
+}
+
+BLT_INLINE int terminal_read_str(int x, int y, char* buffer, int max) {
+	return terminal_read_str8(x, y, (int8_t*)buffer, max);
+}
+
+
+BLT_INLINE int terminal_read_wstr(int x, int y, wchar_t* buffer, int max) {
+	return TERMINAL_CAT(terminal_read_str, BLT_WCHAR_SUFFIX)(x, y, (BLT_WCHAR_TYPE*)buffer, max);
+}
+
+
+BLT_INLINE const char* terminal_get(const char* key, const char* default_ BLT_DEFAULT((const char*)0)) {
+	return (const char*)terminal_get8((const int8_t*)key, (const int8_t*)default_);
+}
+
+
+BLT_INLINE const wchar_t* terminal_wget(const wchar_t* key, const wchar_t* default_ BLT_DEFAULT((const wchar_t*)0)) {
+	return (const wchar_t*)TERMINAL_CAT(terminal_get, BLT_WCHAR_SUFFIX)((const BLT_WCHAR_TYPE*)key, (const BLT_WCHAR_TYPE*)default_);
+}
+
+
+BLT_INLINE color_t color_from_name(const char* name) {
+	return color_from_name8((const int8_t*)name);
+}
+
+
+BLT_INLINE color_t color_from_wname(const wchar_t* name) {
+	return TERMINAL_CAT(color_from_name, BLT_WCHAR_SUFFIX)((const BLT_WCHAR_TYPE*)name);
+}
 
 #endif //_BLT_H_
