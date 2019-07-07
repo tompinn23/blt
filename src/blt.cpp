@@ -1,7 +1,16 @@
 #include "blt.h"
+/*
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+FILE _iob[] = { *stdin, *stdout, *stderr };
 
+extern "C" FILE* __cdecl __iob_func(void)
+{
+	return _iob;
+}
+#endif
+*/
 #define STUB_API \
-	printf("API call: %s needs IMPLEMENTING\n", __func__);
+	printf("api call: %s needs IMPLEMENTING\n", __func__);
 
 int terminal_open() {
 	STUB_API

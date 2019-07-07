@@ -24,7 +24,7 @@ add_library(SDL_gpu STATIC ${SDL_gpu_src})
 target_compile_definitions(SDL_gpu PUBLIC "SDL_GPU_DISABLE_GLES")
 target_include_directories(SDL_gpu PRIVATE include/ src/externals/stb_image src/externals/stb_image_write src/externals/glew/GL src/externals/glew/ src/)
 target_include_directories(SDL_gpu PUBLIC include/)
-target_link_libraries(SDL_gpu SDL2::SDL2)
+target_link_libraries(SDL_gpu SDL2 SDL2main)
 set_target_properties(SDL_gpu PROPERTIES C_STANDARD 99 LINKER_LANGUAGE C)
 	
 
