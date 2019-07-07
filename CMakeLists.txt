@@ -7,6 +7,23 @@ option(BLT_BUILD_SHARED "Build Shared LibrarY" ON)
 
 set(BLT_SRC src/blt.cpp)
 
+# Handle SDL2
+
+#if(MINGW OR NOT WIN32)
+	#message(STATUS "Building in MingW")
+	find_package(SDL2)
+	if(NOT SDL2_FOUND)
+		add_subdirectory(deps/SDL2-2.0.9)
+	else()
+		add_library(SDL2 INTERFACE)
+		target_include_directories(SDL2 INTERFACE ${SDL2_INCLUDE_DIRS})
+		target_link_libraries(SDL2 INTERFACE ${SDL2_LIBRARIES})
+	endif()
+#endif()
+
+
+add_subdirectory(deps/sdl-gpu)
+
 
 if(BLT_BUILD_STATIC)
 	add_library(blt-static STATIC ${BLT_SRC})
