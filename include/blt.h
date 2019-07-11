@@ -270,12 +270,12 @@ BLT_API int terminal_pick(int x, int y, int index);
 BLT_API color_t terminal_pick_color(int x, int y, int index);
 BLT_API color_t terminal_pick_bkcolor(int x, int y);
 BLT_API void terminal_put_ext(int x, int y, int dx, int dy, int code, color_t* corners);
-BLT_API dimensions_t terminal_print_ext8(int x, int y, int width, int height, int align, const int8_t* s, int* out_w, int* out_h);
-BLT_API dimensions_t terminal_print_ext16(int x, int y, int width, int height, int align, const int16_t* s, int* out_w, int* out_h);
-BLT_API dimensions_t terminal_print_ext32(int x, int y, int width, int height, int align, const int32_t* s, int* out_w, int* out_h);
-BLT_API dimensions_t terminal_measure_ext8(int width, int height, const int8_t* s, int* out_w, int* out_h);
-BLT_API dimensions_t terminal_measure_ext16(int width, int height, const int16_t* s, int* out_w, int* out_h);
-BLT_API dimensions_t terminal_measure_ext32(int width, int height, const int32_t* s, int* out_w, int* out_h);
+BLT_API void terminal_print_ext8(int x, int y, int width, int height, int align, const int8_t* s, int* out_w, int* out_h);
+BLT_API void terminal_print_ext16(int x, int y, int width, int height, int align, const int16_t* s, int* out_w, int* out_h);
+BLT_API void terminal_print_ext32(int x, int y, int width, int height, int align, const int32_t* s, int* out_w, int* out_h);
+BLT_API void terminal_measure_ext8(int width, int height, const int8_t* s, int* out_w, int* out_h);
+BLT_API void terminal_measure_ext16(int width, int height, const int16_t* s, int* out_w, int* out_h);
+BLT_API void terminal_measure_ext32(int width, int height, const int32_t* s, int* out_w, int* out_h);
 BLT_API int terminal_state(int slot);
 BLT_API int terminal_check(int slot);
 BLT_API int terminal_has_input();
@@ -468,7 +468,7 @@ BLT_INLINE dimensions_t terminal_wprint(int x, int y, const wchar_t* s) {
 }
 
 BLT_INLINE dimensions_t terminal_wprintf(int x, int y, const wchar_t*s, ...)  {
-	TERMINAL_FORMATTED_WRAP(dimensions_t, terminal_wprint(x, y, terminal_vswprintf(s, args)))
+	TERMINAL_FORMATTED_WRAP_V(terminal_wprint(x, y, terminal_vswprintf(s, args)))
 }
 
 BLT_INLINE dimensions_t terminal_print_ext(int x, int y, int w, int h, int align, const char* s) {
@@ -479,6 +479,7 @@ BLT_INLINE dimensions_t terminal_print_ext(int x, int y, int w, int h, int align
 
 
 BLT_INLINE dimensions_t terminal_printf_ext(int x, int y, int w, int h, int align, const char* s, ...) {
+
 	TERMINAL_FORMATTED_WRAP(dimensions_t, terminal_print_ext(x, y, w, h, align, terminal_vsprintf(s, args)));
 }
 
