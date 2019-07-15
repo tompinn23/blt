@@ -44,10 +44,10 @@ namespace BearLibTerminal
 		}
 	}
 
-	std::wstring read_until3(const wchar_t*& p, const std::wstring& until)
+	std::string read_until3(const char*& p, const std::string& until)
 	{
-		std::wstring value, space;
-		wchar_t closing_quote = 0;
+		std::string value, space;
+		char closing_quote = 0;
 
 		while (*p != L'\0' && (closing_quote || until.find(*p) == std::wstring::npos))
 		{
@@ -97,21 +97,21 @@ namespace BearLibTerminal
 		return value;
 	};
 
-	std::list<OptionGroup> ParseOptions2(const std::wstring& s, bool semicolon_comments)
+	std::list<OptionGroup> ParseOptions2(const std::string& s, bool semicolon_comments)
 	{
 		std::list<OptionGroup> result;
-		std::map<std::wstring, decltype(result.begin())> lookup;
+		std::map<std::string, decltype(result.begin())> lookup;
 
-		const wchar_t* p = s.c_str();
+		const char* p = s.c_str();
 
-		auto keep_property2 = [&](std::wstring name, std::wstring value)
+		auto keep_property2 = [&](std::string name, std::string value)
 		{
 			// a       --> [a] ''       font.''
 			// a.b     --> [a] b        window.title
 			// a.b.c   --> [a.b] c      ini.custom.property
 			// a.b.c.d --> [a.b] c.d    ini.bearlibterminal.window.title
 
-			std::wstring section_name = L"_";
+			std::string section_name = "_";
 
 			size_t first_period_pos = name.find(L'.');
 			if (first_period_pos == std::wstring::npos)

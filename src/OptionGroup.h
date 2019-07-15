@@ -31,13 +31,13 @@ namespace BearLibTerminal
 {
 	struct OptionGroup
 	{
-		std::wstring name;
-		std::map<std::wstring, std::wstring> attributes;
+		std::string name;
+		std::map<std::string, std::string> attributes;
 	};
 
-	std::list<OptionGroup> ParseOptions2(const std::wstring& s, bool semicolon_comments = false);
+	std::list<OptionGroup> ParseOptions2(const std::string& s, bool semicolon_comments = false);
 
-	std::wstring read_until3(const wchar_t*& p, const std::wstring& until);
+	std::wstring read_until3(const char*& p, const std::string& until);
 }
 
 #endif /* OPTIONGROUP_HPP_ */

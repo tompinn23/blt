@@ -42,7 +42,7 @@ int terminal_set8(const int8_t* s) {
 	if (!s) {
 		return -1;
 	}
-	g_instance->Set(std::string((char*)s));
+	g_instance->Set(std::string((const char*)s));
 	return 0;
 }
 

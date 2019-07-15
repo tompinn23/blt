@@ -7,10 +7,8 @@ template<typename T>
 struct BasicSize {
 	T width;
 	T height;
-	BasicSize():
-		width(0)
-		height(0)
-	{}
+	BasicSize()
+		:width(0), height(0) {}
 
 	BasicSize(T width, T height)
 		: width(width), height(height) {}
