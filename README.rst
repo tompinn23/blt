@@ -1,5 +1,5 @@
 blt 🥪
-***
+*****
 
 blt is a library that implements an almost perfect copy of `bearlibterminal <http://foo.wyrd.name/en:bearlibterminal>`.
 
