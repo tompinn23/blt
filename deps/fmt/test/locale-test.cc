@@ -8,8 +8,8 @@
 #include "fmt/locale.h"
 #include "gmock.h"
 
-#ifndef FMT_STATIC_THOUSANDS_SEPARATOR
-template <typename Char> struct numpunct : std::numpunct<Char> {
+template <typename Char>
+struct numpunct : std::numpunct<Char> {
  protected:
   Char do_thousands_sep() const FMT_OVERRIDE { return '~'; }
 };
@@ -32,4 +32,3 @@ TEST(LocaleTest, WFormat) {
   fmt::format_arg_store<fmt::wformat_context, int> as{1234567};
   EXPECT_EQ(L"1~234~567", fmt::vformat(loc, L"{:n}", fmt::wformat_args(as)));
 }
-#endif  // FMT_STATIC_THOUSANDS_SEPARATOR
