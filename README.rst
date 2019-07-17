@@ -1,7 +1,7 @@
 blt 🥪
 ***
 
-blt is a library that implements an almost perfect copy of `bearlibterminal <http://foo.wyrd.name/en:bearlibterminal>`.
+blt is a library that implements an almost perfect copy of `bearlibterminal <http://foo.wyrd.name/en:bearlibterminal>`_.
 
 The major difference is that I implement a small subset of the configuration options.
 As I need them. Other than that you should be able to dump it straight into any program using bearlibterminal.
@@ -21,7 +21,7 @@ It will feature support for:
 Building blt.
 *************
 
-To build blt you use cmake available `here <https://cmake.org>`
+To build blt you use cmake available `here <https://cmake.org>`_
 
 First obtain the source with:
 :: 
