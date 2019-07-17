@@ -36,8 +36,11 @@ public:
 private:
 	int SetOptions(std::string opts);
 	std::thread::id main_thread_id;
-
-	BearLibTerminal::Options opt;
+	
+	Size window_size;
+	Size cell_size;
+	int input_filter;
+	std::string title;
 
 };
 

@@ -34,7 +34,7 @@
 #define Windows
 #endif
 
-#include "reject/log.h"
+#include "log.h"
 
 static struct {
 	void* udata;

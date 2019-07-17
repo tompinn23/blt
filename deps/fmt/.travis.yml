@@ -7,6 +7,7 @@ os: linux
 git:
   depth: 1
 
+
 env:
   global:
     - secure: |-
@@ -38,26 +39,6 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
-     # g++ 8 on Linux with C++17
-    - env: COMPILER=g++-8 BUILD=Debug STANDARD=17
-      compiler: gcc
-      addons:
-        apt:
-          update: true
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-8
-    - env: COMPILER=g++-8 BUILD=Release STANDARD=17
-      compiler: gcc
-      addons:
-        apt:
-          update: true
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-8
-
       # Apple clang on OS X with C++14
     - env: BUILD=Debug STANDARD=14
       compiler: clang
@@ -92,33 +73,41 @@ matrix:
       # g++ 4.8 on Linux with C++11
     - env: COMPILER=g++-4.8 BUILD=Debug STANDARD=11
       compiler: gcc
-    - name: Android NDK (Gradle)
-      language: android
+      # g++ 4.4 on Linux with C++11
+    - env: COMPILER=g++-4.4 BUILD=Debug STANDARD=11
+      compiler: gcc
+      addons:
+        apt:
+          update: true
+          packages:
+            - g++-4.4
+          sources:
+            - ubuntu-toolchain-r-test
+      # Android
+    - language: android
       addons:
         apt:
           update: true
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - ninja-build
-            - curl
+            - wget
+            - unzip
             - tree
       android:
         components:
           - tools
           - platform-tools
-          - android-25 # 7.0
-          - android-27 # 8.1
-          - android-28 # 9.0
-          - build-tools-28.0.3
+          - android-21
+      env:
+        - ANDROID=true
       before_install:
-        # Install Gradle from https://sdkman.io/
-        - curl -s "https://get.sdkman.io" | bash > /dev/null
-        - source "$HOME/.sdkman/bin/sdkman-init.sh"
-        - sdk version
-        - sdk install gradle
-        - sdk use gradle
-        - gradle --version
+        # Download/Install Gradle 
+        - wget https://services.gradle.org/distributions/gradle-4.10.2-bin.zip
+        - mkdir -p gradle
+        - unzip -q -d ./gradle gradle-4.10.2-bin.zip
+        - export GRADLE=gradle/gradle-4.10.2/bin/gradle
+        - bash $GRADLE --version
       install:
         # Accept SDK Licenses + Install NDK
         - yes | sdkmanager --update > /dev/null 2>&1
@@ -126,8 +115,7 @@ matrix:
       before_script:
         - pushd ./support
       script:
-        - gradle clean
-        - gradle assemble
+        - bash ../$GRADLE clean assemble
       after_success:
         - popd;
         - tree ./libs
